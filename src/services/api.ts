@@ -29,11 +29,12 @@ export async function fetchNavigationItems(): Promise<NavigationItem[]> {
       return [];
     }
 
-    const transformedData = response.data.map((item: any) =>
+    const transformedData = response.data.map((item: Record<string, unknown>) =>
       transformNavItem(item)
     );
     return transformedData;
   } catch (error) {
+    console.error("Error fetching navigation items:", error);
     throw error;
   }
 }
@@ -48,6 +49,7 @@ export async function saveNavigationChanges(
     
     await api.post("/nav", backendItems);
   } catch (error) {
+    console.error("Error saving navigation changes:", error);
     throw error;
   }
 }
@@ -56,6 +58,7 @@ export async function resetNavigation(): Promise<void> {
   try {
     await api.post("/nav/reset");
   } catch (error) {
+    console.error("Error resetting navigation:", error);
     throw error;
   }
 }
@@ -68,19 +71,20 @@ export async function trackNavChange(analytic: NavigationAnalytics): Promise<voi
       to: analytic.toIndex,
     });
   } catch (error) {
+    console.error("Error tracking navigation change:", error);
   }
 }
 
-function transformNavItem(item: any): NavigationItem {
+function transformNavItem(item: Record<string, unknown>): NavigationItem {
   const navItem: NavigationItem = {
-    id: item.id.toString(),
-    title: item.title,
-    target: item.target || "",
+    id: String(item.id),
+    title: String(item.title),
+    target: item.target ? String(item.target) : "",
     visible: item.visible !== false, // Default to true if not specified
   };
 
-  if (item.children && item.children.length > 0) {
-    navItem.children = item.children.map((child: any) =>
+  if (item.children && Array.isArray(item.children) && item.children.length > 0) {
+    navItem.children = item.children.map((child: Record<string, unknown>) =>
       transformNavItem(child)
     );
   }
@@ -88,8 +92,8 @@ function transformNavItem(item: any): NavigationItem {
   return navItem;
 }
 
-function transformItemForBackend(item: NavigationItem): any {
-  const backendItem: any = {
+function transformItemForBackend(item: NavigationItem): Record<string, unknown> {
+  const backendItem: Record<string, unknown> = {
     id: typeof item.id === 'string' ? parseInt(item.id, 10) || item.id : item.id,
     title: item.title,
     target: item.target,

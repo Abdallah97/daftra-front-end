@@ -8,12 +8,10 @@ import {
   IconButton,
   Box,
   Button,
-  Divider,
   Typography,
   ListItemButton,
   ListItemText,
   Collapse,
-  ListItemIcon,
   CircularProgress,
   useMediaQuery,
   AppBar,
@@ -26,7 +24,6 @@ import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
   Check as CheckIcon,
-  Cancel as CancelIcon,
   ArrowBack as ArrowBackIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon
@@ -36,7 +33,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import NavItem from "./NavItem";
 import { useNavigation } from "../../contexts/navigation/NavigationProvider";
 import { fetchNavigationItems, saveNavigationChanges, resetNavigation, trackNavChange } from "../../services/api";
-import { NavigationItem, NavigationChanges, NavigationAnalytics } from "@/types/navigation";
+import { NavigationAnalytics } from "@/types/navigation";
 
 const drawerWidth = 300;
 
@@ -137,20 +134,22 @@ const DrawerFooter = styled(Box)(({ theme }) => ({
 
 const MobileDrawerHeader = styled(AppBar)(({ theme }) => ({
   position: "sticky",
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor: "#FFFFFF",
   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+  color: "black",
 }));
 
 const MobileMenuItem = styled(ListItemButton)(({ theme }) => ({
   padding: theme.spacing(2),
-  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+  backgroundColor: "#FFFFFF",
 }));
 
 const MobileMenuItemNested = styled(ListItemButton)(({ theme }) => ({
   padding: theme.spacing(1.5, 2),
   paddingLeft: theme.spacing(4),
-  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
-  backgroundColor: alpha(theme.palette.background.default, 0.5),
+  borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+  backgroundColor: "#FFFFFF",
 }));
 
 interface NavigationProps {
@@ -177,24 +176,6 @@ export default function Navigation({ open, onClose }: NavigationProps) {
 
   const [showMobileMenu, setShowMobileMenu] = useState(true);
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    if (items.length > 0) {
-      const sections: Record<string, boolean> = {};
-      
-      items.forEach((item) => {
-        if (item.children && item.children.length > 0) {
-          sections[item.id.toString()] = expandedSections[item.id.toString()] || false;
-        }
-      });
-      
-      setExpandedSections(sections);
-    }
-  }, [items]);
-
   const loadData = async () => {
     try {
       setLoading(true);
@@ -215,10 +196,29 @@ export default function Navigation({ open, onClose }: NavigationProps) {
       setExpandedItems(expanded);
       setExpandedSections(sections);
     } catch (error) {
+      // Handle error silently
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    if (items.length > 0) {
+      const sections: Record<string, boolean> = {};
+      
+      items.forEach((item) => {
+        if (item.children && item.children.length > 0) {
+          sections[item.id.toString()] = expandedSections[item.id.toString()] || false;
+        }
+      });
+      
+      setExpandedSections(sections);
+    }
+  }, [items, expandedSections]);
 
   const handleDrawerClose = () => {
     onClose();
@@ -282,11 +282,12 @@ export default function Navigation({ open, onClose }: NavigationProps) {
   };
 
   const handleReset = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       await resetNavigation();
       await loadData();
     } catch (error) {
+      // Handle error silently
     } finally {
       setLoading(false);
     }
@@ -403,30 +404,30 @@ export default function Navigation({ open, onClose }: NavigationProps) {
       <MobileDrawerHeader>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={onClose} sx={{ mr: 2 }}>
-            <ArrowBackIcon />
+            <ArrowBackIcon sx={{ color: 'black' }} />
           </IconButton>
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" sx={{ color: 'black' }}>
             Menu
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <IconButton edge="end" color="inherit" onClick={handleMobileEditMode}>
-            <SettingsIcon />
+            <SettingsIcon sx={{ color: 'black' }} />
           </IconButton>
         </Toolbar>
       </MobileDrawerHeader>
       
-      <List sx={{ bgcolor: '#f5f5f5', height: '100%', py: 0 }}>
+      <List sx={{ bgcolor: '#FFFFFF', height: '100%', py: 0 }}>
         {items.map((item) => (
           <React.Fragment key={item.id}>
             <MobileMenuItem 
               onClick={() => item.children && item.children.length > 0 && handleToggleSection(item.id.toString())}
               sx={{ opacity: !item.visible ? 0.5 : 1 }}
             >
-              <ListItemText primary={item.title} />
+              <ListItemText primary={item.title} sx={{ color: 'black' }} />
               {item.children && item.children.length > 0 && (
                 expandedSections[item.id.toString()] ? 
-                <KeyboardArrowUpIcon /> : 
-                <KeyboardArrowDownIcon />
+                <KeyboardArrowUpIcon sx={{ color: 'black' }} /> : 
+                <KeyboardArrowDownIcon sx={{ color: 'black' }} />
               )}
             </MobileMenuItem>
             
@@ -435,7 +436,7 @@ export default function Navigation({ open, onClose }: NavigationProps) {
                 <List disablePadding>
                   {item.children.map((child) => (
                     <MobileMenuItemNested key={child.id} sx={{ opacity: !child.visible ? 0.5 : 1 }}>
-                      <ListItemText primary={child.title} />
+                      <ListItemText primary={child.title} sx={{ color: 'black' }} />
                     </MobileMenuItemNested>
                   ))}
                 </List>
@@ -453,9 +454,9 @@ export default function Navigation({ open, onClose }: NavigationProps) {
       <MobileDrawerHeader>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={handleBackToMobileMenu} sx={{ mr: 2 }}>
-            <ArrowBackIcon />
+            <ArrowBackIcon sx={{ color: 'black' }} />
           </IconButton>
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" sx={{ color: 'black' }}>
             Edit Menu
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
@@ -529,31 +530,7 @@ export default function Navigation({ open, onClose }: NavigationProps) {
         </DndProvider>
       )}
 
-      {/* Edit Mode Footer */}
-      {isEditMode && (
-        <DrawerFooter>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SaveIcon />}
-            onClick={handleSaveChanges}
-            disabled={loading}
-            sx={{ mr: 1 }}
-            size={isMobile ? "small" : "medium"}
-          >
-            Save
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<CloseIcon />}
-            onClick={handleDiscardChanges}
-            disabled={loading}
-            size={isMobile ? "small" : "medium"}
-          >
-            Discard
-          </Button>
-        </DrawerFooter>
-      )}
+    
     </>
   );
 

@@ -18,7 +18,6 @@ import {
   useMediaQuery,
   Drawer,
   List,
-  ListItem,
   ListItemIcon,
   ListItemText,
   ListItemButton,
@@ -103,14 +102,6 @@ const NavButton = styled(Box)(({ theme }) => ({
   },
 }));
 
-const MobileNavButton = styled(IconButton)(({ theme }) => ({
-  color: "white",
-  display: "none",
-  [theme.breakpoints.down("sm")]: {
-    display: "flex",
-  },
-}));
-
 const Logo = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   letterSpacing: 1,
@@ -159,6 +150,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [profileAnchorEl, setProfileAnchorEl] = useState<null | HTMLElement>(null);
   const [topNavOpen, setTopNavOpen] = useState(false);
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   useEffect(() => {
     if (!isMobile) {
@@ -178,11 +172,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, []);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  }, [handleDrawerToggle]);
 
   const handleMobileMenuToggle = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -325,8 +315,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Box
                   sx={{
                     position: 'absolute',
-                    top: -5,
-                    right: -5,
+                    top: 20,
+                    right: -6,
                     width: 20,
                     height: 20,
                     borderRadius: '50%',

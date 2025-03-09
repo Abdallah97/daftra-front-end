@@ -10,15 +10,11 @@ import React, {
 } from "react";
 import {
   NavigationItem,
-  NavigationContextType,
-  DragDropPayload,
   NavigationAnalytics,
-  NavigationChanges,
 } from "../../types/navigation";
 import {
   fetchNavigationItems,
   saveNavigationItems,
-  trackItemDragDrop,
 } from "../../utils/api";
 
 interface NavigationContextType {

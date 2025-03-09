@@ -10,7 +10,6 @@ import React, {
 import {
   ThemeProvider as MuiThemeProvider,
   createTheme,
-  Theme,
 } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";

@@ -9,7 +9,6 @@ import React, {
 import {
   NavigationItem,
   NavigationAnalytics,
-  NavigationChanges,
 } from "../../types/navigation";
 import {
   fetchNavigationItems,
@@ -91,7 +90,6 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
     (
       items: NavigationItem[],
       itemId: string,
-      parent?: NavigationItem
     ): NavigationItem | null => {
       for (const item of items) {
         if (item.children && item.children.length > 0) {
@@ -100,7 +98,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
               return item;
             }
           }
-          const found = findParentById(item.children, itemId, item);
+          const found = findParentById(item.children, itemId);
           if (found) return found;
         }
       }

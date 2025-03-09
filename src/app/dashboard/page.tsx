@@ -4,20 +4,13 @@ import React, { useState } from "react";
 import {
   Box,
   Typography,
-  Container,
   Paper,
   Grid,
   Chip,
   IconButton,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
   MenuItem,
-  Pagination,
   Stack,
   Switch,
-  FormControlLabel,
   Menu,
   useMediaQuery,
   useTheme,
@@ -25,12 +18,9 @@ import {
 import {
   Favorite as FavoriteIcon,
   FavoriteBorder as FavoriteBorderIcon,
-  FilterList as FilterIcon,
   LocationOn as LocationIcon,
   CalendarToday as CalendarIcon,
   KeyboardArrowDown as ArrowDownIcon,
-  KeyboardArrowLeft as ArrowLeftIcon,
-  KeyboardArrowRight as ArrowRightIcon,
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import Image from "next/image";
@@ -62,7 +52,6 @@ const JobCard = ({
   company,
   logo,
   timePosted,
-  applicants,
   location,
   experience,
   jobTypes,
@@ -558,15 +547,16 @@ export default function Dashboard() {
                 sx={{ 
                   ml: 1, 
                   mt: 3, 
-                  p: 0.5,
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  p: 1,
+                  border: '1px solid #E0E0E0',
                   borderRadius: '4px',
+                  backgroundColor: 'white',
                   '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: '#F5F5F5',
                   }
                 }}
               >
-                <MenuIcon fontSize="small" />
+                <MenuIcon sx={{ color: '#666666', fontSize: 24 }} />
               </IconButton>
             )}
             

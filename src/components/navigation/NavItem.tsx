@@ -6,7 +6,6 @@ import {
   Box,
   ListItemText,
   ListItemButton,
-  ListItemIcon,
   useMediaQuery,
 } from "@mui/material";
 import {
@@ -125,7 +124,7 @@ export default function NavItem({
 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { items, setItems, isEditMode } = useNavigation();
+  const { items: navItems, setItems, isEditMode } = useNavigation();
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(item.title);
   const ref = useRef<HTMLDivElement>(null);
