@@ -14,8 +14,9 @@ import {
 } from "../../types/navigation";
 import {
   fetchNavigationItems,
-  saveNavigationItems,
-} from "../../utils/api";
+  saveNavigationChanges,
+  trackNavChange
+} from "../../services/api";
 
 interface NavigationContextType {
   items: NavigationItem[];
@@ -53,6 +54,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
   const [isEditMode, setIsEditMode] = useState(false);
   const [analytics, setAnalytics] = useState<NavigationAnalytics[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const loadItems = async () => {
@@ -157,21 +159,20 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({
     });
   }, []);
 
-  const saveChanges = useCallback(async () => {
+  const saveChanges = async () => {
     try {
-      await saveNavigationItems({
-        items,
-        analytics,
+      setIsSaving(true);
+      await saveNavigationChanges({
+        items: items,
       });
-
-      setOriginalItems(JSON.parse(JSON.stringify(items))); 
-      setAnalytics([]);
-      setIsEditMode(false);
+      setOriginalItems([...items]);
+      setIsSaving(false);
+      setEditMode(false);
     } catch (error) {
-      console.error("Failed to save navigation changes:", error);
-      throw error;
+      console.error("Error saving changes:", error);
+      setIsSaving(false);
     }
-  }, [items, analytics]);
+  };
 
   const discardChanges = useCallback(() => {
     setItems(JSON.parse(JSON.stringify(originalItems)));
